@@ -28,15 +28,14 @@ $page = $_GET['page'] ?? null;
 switch ($page) {
     case 'article-index':
         // This is shorthand for:
-        $articleController = new ArticleController;
-        $articleController->index();
-        (new ArticleController())->index();
+        // $articleController = new ArticleController;
+        // $articleController->index();
+        (new ArticleController())->index(); //The same as above without the variable
         break;
-    case 'articles-show':
+    case 'article-show':
         // TODO: detail page
-        $articleController = new ArticleController;
-        $articleController->show();
         (new ArticleController())->show();
+        break;
     case 'home':
     default:
         (new HomepageController())->index();

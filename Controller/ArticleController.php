@@ -10,9 +10,10 @@ class ArticleController
 {
     private DatabaseManager $database;
 
+
     public function __construct()
     {
-        require_once 'config.php';
+        require 'config.php';
         require_once 'DatabaseManager.php';
         $this->database = new DatabaseManager($config['host'], $config['user'], $config['password'], $config['dbname'],);
         $this->database->connect();
@@ -36,14 +37,14 @@ class ArticleController
         $result = $this->database->connection->query($query);
         // fetch all articles as $rawArticles (as a simple array)
         $rawArticles = $result->fetchAll(PDO::FETCH_ASSOC);
-        pre($rawArticles);
+        // pre($rawArticles);
 
         $articles = [];
         foreach ($rawArticles as $rawArticle) {
             // We are converting an article from a "dumb" array to a much more flexible class
-            $articles[] = new Article($rawArticle['title'], $rawArticle['description'], $rawArticle['publish_date']);
+            $articles[] = new Article($rawArticle['title'], $rawArticle['description'], $rawArticle['publish_date'], $rawArticle['id']);
         }
-        pre($articles);
+        // pre($articles);
 
         return $articles;
     }
@@ -51,5 +52,11 @@ class ArticleController
     public function show()
     {
         // TODO: this can be used for a detail page
+        $query = "SELECT * FROM articles WHERE id = {$_GET['id']}";
+        $result = $this->database->connection->query($query);
+        $rawArticle = $result->fetch(PDO::FETCH_ASSOC);
+
+        $article= new Article($rawArticle['title'], $rawArticle['description'], $rawArticle['publish_date'], $rawArticle['id']);
+        require 'View/article/show.php';
     }
 }
